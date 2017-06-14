@@ -7,6 +7,10 @@
  *
  *  2. then 方法可以被同一个 promise 调用多次。
  *
+ *  3. then 方法必须返回一个 promise
+ *
+ *  4. 值穿透 （demo.js 里面有例子）
+ *
  */
 
 /**
@@ -76,6 +80,7 @@ class Promise {
    * @memberof Promise
    */
   then (onFulfilled, onRejected) {
+    // 这里可能会值穿透
     if (!isFunction(onFulfilled) && this.state === FULFILLED ||
     !isFunction(onRejected) && this.state === REJECTED) {
       return this
@@ -205,6 +210,7 @@ function unwrap (promise, func, value) {
     if (returnValue === promise) {
       doReject(promise, value)
     } else {
+      // 这里可能会值穿透
       doResolve(promise, returnValue)
     }
   })
